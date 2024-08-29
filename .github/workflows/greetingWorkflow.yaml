@@ -1,0 +1,33 @@
+name: Generate 3D GitHub Contribution Graph
+
+on:
+  schedule:
+    - cron: "30 20 * * 4"  # Schedule the workflow to run every Thursday at 3:30 PM Central Time (8:30 PM UTC)
+  workflow_dispatch:  # Allows the workflow to be triggered manually from the GitHub UI
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu virtual environment
+
+    steps:
+      - uses: actions/checkout@v3  # Step 1: Checkout the repository to the runner
+
+      - uses: yoshi389111/github-profile-3d-contrib@0.7.1  # Step 2: Generate the 3D contribution images using a predefined action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Provide GitHub token for authentication
+          USERNAME: ${{ github.repository_owner }}  # Set the username dynamically based on the repository owner
+
+      - name: Commit & Push if Changes  # Step 3: Conditionally commit and push changes
+        run: |
+          git config user.name github-actions  # Configure the git user name for the commit
+          git config user.email github-actions@github.com  # Configure the git user email for the commit
+
+          # Check if there are any changes to commit
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "There are changes to commit."
+            git add -A  # Stage all changes
+            git commit -m "Update 3D contribution graph - $(date +'%Y-%m-%d %H:%M:%S')"  # Commit with a timestamped message
+            git push  # Push the changes to the repository
+          else
+            echo "No changes detected."  # If no changes are found, output a message
+          fi
