@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # Use the latest Ubuntu virtual environment
+    runs-on: ubuntu-latest  # Use the latest Ubuntu virtual environment
 
     steps:
       - uses: actions/checkout@v3  # Step 1: Checkout the repository to the runner
