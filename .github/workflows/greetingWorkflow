@@ -1,0 +1,13 @@
+name: Greeting Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greeting Message
+        run: echo "Hello, ${{ github.repository_owner }}! Welcome to the repository."
